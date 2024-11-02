@@ -17,12 +17,14 @@ const app = express();
 // middlewares
 ////////////////
 
-app.use(
-  cors({
-    origin: "https://mern-interview-test-frontend-bo46.onrender.com",
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: "https://mern-interview-test-frontend-bo46.onrender.com",
+//     credentials: true,
+//   })
+// );
+
+app.use(cors());
 
 // Set security HTTP headers
 app.use(helmet());
