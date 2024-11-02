@@ -18,15 +18,9 @@ const app = express();
 // middlewares
 ////////////////
 
-app.use(cors());
-
-// app.use(
-//   cors({
-//     origin: [process.env.CLIENT_URL, process.env.ADMIN_URL],
-//     methods: ["GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS"],
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({ origin: "https://mern-interview-test-frontend-bo46.onrender.com/" })
+);
 
 // Set security HTTP headers
 app.use(helmet());
