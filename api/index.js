@@ -6,7 +6,6 @@ const rateLimit = require(`express-rate-limit`); // eslint-disable-line import/n
 const morgan = require(`morgan`);
 const mongoSanitize = require(`express-mongo-sanitize`); // eslint-disable-line import/no-extraneous-dependencies
 const xss = require(`xss-clean`); // eslint-disable-line import/no-extraneous-dependencies
-const cookieSession = require("cookie-session"); // eslint-disable-line import/no-extraneous-dependencies
 const cors = require("cors"); // eslint-disable-line import/no-extraneous-dependencies
 
 const AppError = require(`./utils/appError`);
@@ -18,7 +17,6 @@ const app = express();
 // middlewares
 ////////////////
 
-const cors = require("cors");
 app.use(
   cors({
     origin: "https://mern-interview-test-frontend-bo46.onrender.com",
