@@ -70,7 +70,6 @@ app.all(`*`, (req, res, next) => {
 
 app.use(globalErrorHandler);
 
-app.set("view engine", "ejs");
 app.set("trust proxy", 1);
 
 module.exports = app;

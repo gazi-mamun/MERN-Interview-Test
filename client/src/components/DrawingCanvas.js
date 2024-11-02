@@ -61,10 +61,6 @@ export default function DrawingCanvas({ drawing }) {
     }
   }, [context, shapes, zoom, pan]);
 
-  useEffect(() => {
-    console.log({ shapes });
-  }, [shapes]);
-
   // for property change
   useEffect(() => {
     if (selectedShapeIndex !== null) {

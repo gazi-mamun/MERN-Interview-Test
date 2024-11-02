@@ -10,7 +10,6 @@ export default function Whiteboard() {
   useEffect(() => {
     async function getDrawing() {
       const data = await fetchSingleDrawing(id);
-      console.log({ data });
       setDrawing(data);
     }
     getDrawing();
