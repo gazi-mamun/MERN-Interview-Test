@@ -18,8 +18,12 @@ const app = express();
 // middlewares
 ////////////////
 
+const cors = require("cors");
 app.use(
-  cors({ origin: "https://mern-interview-test-frontend-bo46.onrender.com/" })
+  cors({
+    origin: "https://mern-interview-test-frontend-bo46.onrender.com",
+    credentials: true,
+  })
 );
 
 // Set security HTTP headers
@@ -67,5 +71,8 @@ app.all(`*`, (req, res, next) => {
 });
 
 app.use(globalErrorHandler);
+
+app.set("view engine", "ejs");
+app.set("trust proxy", 1);
 
 module.exports = app;
