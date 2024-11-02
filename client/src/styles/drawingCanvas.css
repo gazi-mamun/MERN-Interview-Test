@@ -1,0 +1,28 @@
+.drawing-canvas {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.canvas-container {
+  flex: 1;
+  height: 100%;
+}
+
+canvas {
+  cursor: crosshair;
+}
+
+.text-input-overlay {
+  position: absolute; /* Helps to see the box clearly */
+  background: #fff;
+  color: #000;
+  outline: none;
+  pointer-events: auto;
+}
+
+.text-input-overlay input {
+  padding: 4px;
+}
