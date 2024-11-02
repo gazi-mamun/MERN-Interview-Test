@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/toolbar.css";
 import { RxCursorArrow } from "react-icons/rx";
 import { IoBrushOutline } from "react-icons/io5";
@@ -10,13 +10,13 @@ import { LuEraser } from "react-icons/lu";
 import { BiUndo } from "react-icons/bi";
 import { BiRedo } from "react-icons/bi";
 
-import { useNavigate } from "react-router-dom";
 import {
   createShape,
   deleteShape,
   updateDrawing,
   updateShape,
 } from "../utils/api";
+import { useModal } from "../context/ModalContext";
 
 export default function Toolbar({
   pan,
@@ -43,45 +43,77 @@ export default function Toolbar({
   undo,
   redo,
 }) {
-  const navigate = useNavigate();
+  const [saving, setSaving] = useState(false);
 
-  const handleSave = () => {
-    // Step 1: Create new shapes (those without `_id`)
-    shapes.forEach((shape) => {
-      if (!shape._id && !shape.drawing) {
-        console.log("Creating shape:", shape);
-        shape.drawing = drawing._id;
-        createShape(shape); // Call function to create a new shape
+  const { openModal, closeModal } = useModal();
+
+  useEffect(() => {
+    if (saving === true) {
+      openModal(<p>Saving...</p>);
+    } else {
+      closeModal();
+    }
+  }, [saving]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      // Step 1: Create new shapes (those without `_id`)
+      for (const shape of shapes) {
+        if (!shape._id && !shape.drawing) {
+          console.log("Creating shape:", shape);
+          shape.drawing = drawing._id;
+          await createShape(shape); // Await the creation to complete
+        }
       }
-    });
 
-    // Step 2: Update existing shapes (those with `_id` and modified properties)
-    shapes.forEach((shape) => {
-      const originalShape = drawing.shapes.find(
-        (drawingShape) => drawingShape._id === shape._id
-      );
-      if (
-        originalShape &&
-        JSON.stringify(originalShape) !== JSON.stringify(shape)
-      ) {
-        console.log("Updating shape:", shape._id);
-        updateShape(shape._id, shape); // Call function to update the shape
+      // Step 2: Update existing shapes (those with `_id` and modified properties)
+      for (const shape of shapes) {
+        const originalShape = drawing.shapes.find(
+          (drawingShape) => drawingShape._id === shape._id
+        );
+
+        if (originalShape) {
+          const hasChanges =
+            [
+              "fillColor",
+              "strokeColor",
+              "strokeWidth",
+              "opacity",
+              "borderRadius",
+            ].some((prop) => originalShape[prop] !== shape[prop]) ||
+            originalShape.points?.toString() !== shape.points?.toString() ||
+            JSON.stringify(originalShape.eraseRegions) !==
+              JSON.stringify(shape.eraseRegions);
+
+          if (hasChanges) {
+            console.log("Updating shape:", shape._id);
+            await updateShape(shape._id, shape); // Await the update to complete
+          }
+        }
       }
-    });
 
-    // Step 3: Delete shapes that are in drawing.shapes but not in shapes
-    drawing.shapes.forEach((drawingShape) => {
-      const isShapePresent = shapes.some(
-        (shape) => shape._id === drawingShape._id
-      );
-      if (!isShapePresent) {
-        console.log("Deleting shape:", drawingShape._id);
-        deleteShape(drawingShape._id); // Call function to delete the shape
+      // Step 3: Delete shapes that are in drawing.shapes but not in shapes
+      for (const drawingShape of drawing.shapes) {
+        const isShapePresent = shapes.some(
+          (shape) => shape._id === drawingShape._id
+        );
+        if (!isShapePresent) {
+          console.log("Deleting shape:", drawingShape._id);
+          await deleteShape(drawingShape._id); // Await the deletion to complete
+        }
       }
-    });
 
-    if (drawing.pan !== pan || drawing.zoom !== zoom) {
-      updateDrawing(drawing._id, { pan, zoom });
+      // Step 4: Update the drawing pan and zoom if changed
+      if (drawing.pan !== pan || drawing.zoom !== zoom) {
+        await updateDrawing(drawing._id, { pan, zoom });
+      }
+
+      console.log("All changes saved successfully.");
+    } catch (error) {
+      console.error("Error saving changes:", error);
+    } finally {
+      setSaving(false);
     }
   };
 

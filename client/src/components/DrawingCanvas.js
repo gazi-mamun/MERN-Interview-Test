@@ -421,6 +421,10 @@ export default function DrawingCanvas({ drawing }) {
     setDrawingMode(mode);
   };
 
+  useEffect(() => {
+    console.log({ shapes });
+  }, [shapes]);
+
   return (
     <div className="drawing-canvas">
       {/* toolbar */}

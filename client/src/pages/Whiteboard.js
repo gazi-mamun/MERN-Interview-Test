@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import DrawingCanvas from "../components/DrawingCanvas";
 import { fetchSingleDrawing } from "../utils/api";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function Whiteboard() {
   const { id } = useParams();
@@ -17,8 +18,7 @@ export default function Whiteboard() {
 
   return (
     <div>
-      {/* <DrawingCanvas drawing={drawing} /> */}
-      {drawing ? <DrawingCanvas drawing={drawing} /> : <p>Loading...</p>}
+      {drawing ? <DrawingCanvas drawing={drawing} /> : <LoadingSpinner />}
     </div>
   );
 }

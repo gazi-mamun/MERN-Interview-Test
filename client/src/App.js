@@ -4,6 +4,7 @@ import DrawingList from "./pages/DrawingList";
 import Whiteboard from "./pages/Whiteboard";
 import Modal from "./components/Modal";
 import { ModalProvider } from "./context/ModalContext";
+import NotFound from "./components/NotFound";
 
 function App() {
   return (
@@ -13,6 +14,8 @@ function App() {
         <Routes>
           <Route path="/" element={<DrawingList />} />
           <Route path="/drawing/:id" element={<Whiteboard />} />
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </ModalProvider>

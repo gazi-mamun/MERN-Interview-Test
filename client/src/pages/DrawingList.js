@@ -5,16 +5,24 @@ import "../styles/drawingList.css";
 import { useModal } from "../context/ModalContext";
 import DrawingForm from "../components/DrawingForm";
 import { fetchAllDrawings } from "../utils/api";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function DrawingList() {
   const { openModal } = useModal();
 
   const [drawings, setDrawings] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadDrawings = async () => {
-      const data = await fetchAllDrawings();;
-      setDrawings(data);
+      try {
+        const data = await fetchAllDrawings();
+        setDrawings(data);
+      } catch (error) {
+        console.error("Error fetching drawings:", error);
+      } finally {
+        setLoading(false);
+      }
     };
     loadDrawings();
   }, []);
@@ -22,6 +30,10 @@ export default function DrawingList() {
   const handleCreateClick = () => {
     openModal(<DrawingForm />);
   };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className={"drawing-page"}>
