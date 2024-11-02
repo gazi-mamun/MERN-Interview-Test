@@ -68,8 +68,7 @@ app.all(`*`, (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
-app.use(globalErrorHandler);
-
 app.set("trust proxy", 1);
+app.use(globalErrorHandler);
 
 module.exports = app;
